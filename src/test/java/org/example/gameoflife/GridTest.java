@@ -93,6 +93,23 @@ class GridTest {
     }
 
     @Test
+    void edgeCase() {
+        final String actual = "5 8\n" +
+                "********\n" +
+                "*......*\n" +
+                "*......*\n" +
+                "*......*\n" +
+                "********";
+        final String expected = "5 8\n" +
+                "********\n" +
+                "*.****.*\n" +
+                "**....**\n" +
+                "*.****.*\n" +
+                "********";
+        assertThat(Grid.parse(actual).nextGeneration().toString()).isEqualTo(expected);
+    }
+
+    @Test
     void predefinedGrid() {
         final String actual = "4 8\n" +
                 "........\n" +
@@ -108,14 +125,18 @@ class GridTest {
     }
 
     @Test
-    void edgeCase() {
-        final Grid grid = Grid.parse("4 8\n" +
+    void blinker() {
+        final String actual = "4 8\n" +
                 "........\n" +
                 "....*...\n" +
                 "....*...\n" +
-                "........");
-        final Grid nextGenerationGrid = grid.nextGeneration();
-        System.out.println(nextGenerationGrid);
+                "....*...";
+        final String expected = "4 8\n" +
+                "........\n" +
+                "........\n" +
+                "...***..\n" +
+                "........";
+        assertThat(Grid.parse(actual).nextGeneration().toString()).isEqualTo(expected);
     }
 
     static Grid newRandomGrid() {
