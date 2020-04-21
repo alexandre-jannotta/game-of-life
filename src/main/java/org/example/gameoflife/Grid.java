@@ -18,7 +18,7 @@ public class Grid {
             Coordinate.builder().x(1).y(1).build()
     );
 
-    final boolean[][] rows;
+    private final boolean[][] rows;
 
     public static Grid parse(final String gridString) {
         final String[] rows = gridString.split("\n");
@@ -67,7 +67,7 @@ public class Grid {
         return coordinate.isIn(this) && this.rows[coordinate.getY()][coordinate.getX()];
     }
 
-    boolean cellSurvive(final Coordinate coordinate) {
+    public boolean isCellSurviving(final Coordinate coordinate) {
         final long count = NEIGHBOUR_OFFSETS.stream()
                 .map(coordinate::move)
                 .filter(this::isCellAlive)
@@ -75,14 +75,14 @@ public class Grid {
         return this.isCellAlive(coordinate) && count >= 2 && count <= 3 || count == 3;
     }
 
-    Grid nextGeneration() {
+    public Grid nextGeneration() {
         final Grid nextGenerationGrid = new Grid(this);
         final CoordinateBuilder coordinateBuilder = Coordinate.builder();
         for (int rowIndex = 0; rowIndex < this.getHeight(); rowIndex++) {
             coordinateBuilder.y(rowIndex);
             for (int columnIndex = 0; columnIndex < this.getWidth(); columnIndex++) {
                 final Coordinate coordinate = coordinateBuilder.x(columnIndex).build();
-                nextGenerationGrid.setCell(coordinate, this.cellSurvive(coordinate));
+                nextGenerationGrid.setCell(coordinate, this.isCellSurviving(coordinate));
             }
         }
         return nextGenerationGrid;

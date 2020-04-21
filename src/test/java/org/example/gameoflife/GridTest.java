@@ -24,9 +24,9 @@ class GridTest {
 
         grid.setCellAlive(coordinate);
 
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 0
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 0
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 1
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 1
     }
 
     @RepeatedTest(10)
@@ -39,9 +39,9 @@ class GridTest {
         grid.setCellAlive(neighbours.remove(0));
 
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isTrue(); // 2
+        assertThat(grid.isCellSurviving(coordinate)).isTrue(); // 2
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isTrue(); // 3
+        assertThat(grid.isCellSurviving(coordinate)).isTrue(); // 3
     }
 
     @RepeatedTest(10)
@@ -56,15 +56,15 @@ class GridTest {
         grid.setCellAlive(neighbours.remove(0)); // 3
 
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 4
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 4
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 5
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 5
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 6
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 6
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 7
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 7
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 8
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 8
     }
 
     @RepeatedTest(10)
@@ -73,23 +73,23 @@ class GridTest {
         final Coordinate coordinate = newRandomCoordinateNotOnEdge(grid);
         final List<Coordinate> neighbours = randomNeighboursOf(coordinate);
 
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 0
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 0
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 1
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 1
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 2
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 2
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isTrue(); // 3
+        assertThat(grid.isCellSurviving(coordinate)).isTrue(); // 3
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 4
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 4
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 5
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 5
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 6
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 6
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 7
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 7
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 8
+        assertThat(grid.isCellSurviving(coordinate)).isFalse(); // 8
     }
 
     @Test
