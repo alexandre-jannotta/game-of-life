@@ -139,6 +139,21 @@ class GridTest {
         assertThat(Grid.parse(actual).nextGeneration().toString()).isEqualTo(expected);
     }
 
+    @Test
+    void block() {
+        final String actual = "4 8\n" +
+                "........\n" +
+                "...**...\n" +
+                "...**...\n" +
+                "........";
+        final String expected = "4 8\n" +
+                "........\n" +
+                "...**...\n" +
+                "...**...\n" +
+                "........";
+        assertThat(Grid.parse(actual).nextGeneration().toString()).isEqualTo(expected);
+    }
+
     static Grid newRandomGrid() {
         return newRandomGrid(5, 10, 5, 10);
     }
