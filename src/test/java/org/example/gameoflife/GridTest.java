@@ -68,7 +68,7 @@ class GridTest {
     }
 
     @RepeatedTest(10)
-    void anDeadCellWithThreeNeighboursResurrect() {
+    void aDeadCellWithThreeNeighboursResurrect() {
         final Grid grid = newRandomGrid();
         final Coordinate coordinate = newRandomCoordinateNotOnEdge(grid);
         final List<Coordinate> neighbours = randomNeighboursOf(coordinate);
