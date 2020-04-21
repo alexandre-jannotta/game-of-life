@@ -24,7 +24,7 @@ class GameOfLifeTest {
     }
 
     @RepeatedTest(10)
-    void anAliveCellSurviveWithFewerThanTwoNeighbours() {
+    void anAliveCellDieWithFewerThanTwoNeighbours() {
         final Grid grid = newRandomGrid();
         final Coordinate coordinate = newRandomCoordinateNotOnEdge(grid);
 
@@ -32,12 +32,30 @@ class GameOfLifeTest {
         grid.setCellAlive(coordinate);
         assertThat(this.test.survive(grid, coordinate)).isFalse();
 
-        final List<Coordinate> neighbours = randomNeighboursOf(coordinate, 2);
+        final List<Coordinate> neighbours = randomNeighboursOf(coordinate);
 
+        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 0
         grid.setCellAlive(neighbours.remove(0));
         assertThat(this.test.survive(grid, coordinate)).isFalse(); // 1
+    }
+
+    @RepeatedTest(10)
+    void anAliveCellSurviveWithTweOrThreeNeighbours() {
+        final Grid grid = newRandomGrid();
+        final Coordinate coordinate = newRandomCoordinateNotOnEdge(grid);
+
+        // Alone
+        grid.setCellAlive(coordinate);
+        assertThat(this.test.survive(grid, coordinate)).isFalse();
+
+        final List<Coordinate> neighbours = randomNeighboursOf(coordinate);
+
+        grid.setCellAlive(neighbours.remove(0));
+
         grid.setCellAlive(neighbours.remove(0));
         assertThat(this.test.survive(grid, coordinate)).isTrue(); // 2
+        grid.setCellAlive(neighbours.remove(0));
+        assertThat(this.test.survive(grid, coordinate)).isTrue(); // 3
     }
 
     @RepeatedTest(10)
@@ -49,7 +67,7 @@ class GameOfLifeTest {
         grid.setCellAlive(coordinate);
         assertThat(this.test.survive(grid, coordinate)).isFalse();
 
-        final List<Coordinate> neighbours = randomNeighboursOf(coordinate, 8);
+        final List<Coordinate> neighbours = randomNeighboursOf(coordinate);
 
         grid.setCellAlive(neighbours.remove(0)); // 1
         grid.setCellAlive(neighbours.remove(0)); // 2
@@ -84,9 +102,9 @@ class GameOfLifeTest {
                 .build();
     }
 
-    static List<Coordinate> randomNeighboursOf(final Coordinate coordinate, final int count) {
+    static List<Coordinate> randomNeighboursOf(final Coordinate coordinate) {
         final List<Coordinate> neighbourOffsets = new ArrayList<>(NEIGHBOUR_OFFSETS);
-        return IntStream.range(0, count)
+        return IntStream.range(0, neighbourOffsets.size())
                 .mapToObj(n -> neighbourOffsets.remove(RANDOM.nextInt(neighbourOffsets.size())))
                 .map(coordinate::move)
                 .collect(Collectors.toList());
