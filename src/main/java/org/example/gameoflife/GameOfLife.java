@@ -4,7 +4,7 @@ import java.util.List;
 
 public class GameOfLife {
 
-    public static final java.util.List<Coordinate> NEIGHBOUR_OFFSETS = List.of(
+    public static final List<Coordinate> NEIGHBOUR_OFFSETS = List.of(
             Coordinate.builder().x(-1).y(-1).build(),
             Coordinate.builder().x(-1).y(0).build(),
             Coordinate.builder().x(-1).y(1).build(),
@@ -16,10 +16,11 @@ public class GameOfLife {
     );
 
     boolean survive(final Grid grid, final Coordinate coordinate) {
-        return NEIGHBOUR_OFFSETS.stream()
+        final long count = NEIGHBOUR_OFFSETS.stream()
                 .map(coordinate::move)
                 .filter(grid::isCellAlive)
-                .count() >= 2;
+                .count();
+        return count >= 2 && count <= 3;
     }
 
 }
