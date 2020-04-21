@@ -25,13 +25,30 @@ public class Grid {
     }
 
     public void setCellAlive(final Coordinate coordinate) {
+        this.setCell(coordinate, true);
+    }
+
+    public void setCell(final Coordinate coordinate, final boolean alive) {
         if (coordinate.isIn(this)) {
-            this.rows[coordinate.getY()][coordinate.getX()] = true;
+            this.rows[coordinate.getY()][coordinate.getX()] = alive;
         }
     }
 
     public boolean isCellAlive(final Coordinate coordinate) {
         return coordinate.isIn(this) && this.rows[coordinate.getY()][coordinate.getX()];
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.getHeight()).append(' ').append(this.getWidth());
+        for (final boolean[] row : this.rows) {
+            stringBuilder.append('\n');
+            for (final boolean cell : row) {
+                stringBuilder.append(cell ? '*' : '.');
+            }
+        }
+        return stringBuilder.toString();
     }
 
 }

@@ -20,7 +20,20 @@ public class GameOfLife {
                 .map(coordinate::move)
                 .filter(grid::isCellAlive)
                 .count();
-        return count >= 2 && count <= 3;
+        return grid.isCellAlive(coordinate) && count >= 2 && count <= 3 || count == 3;
     }
 
+    Grid computeNextGeneration(final Grid grid) {
+        final Grid nextGenerationGrid = new Grid(grid);
+        final Coordinate.CoordinateBuilder coordinateBuilder = Coordinate.builder();
+        for (int rowIndex = 0; rowIndex < grid.getHeight(); rowIndex++) {
+            coordinateBuilder.y(rowIndex);
+            for (int columnIndex = 0; columnIndex < grid.getWidth(); columnIndex++) {
+                final Coordinate coordinate = coordinateBuilder.x(columnIndex).build();
+                nextGenerationGrid.setCell(coordinate, survive(grid, coordinate));
+            }
+        }
+        return nextGenerationGrid;
+    }
+    
 }
