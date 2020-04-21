@@ -1,29 +1,37 @@
 package org.example.gameoflife;
 
-import java.util.Random;
+import java.util.Arrays;
 
 public class Grid {
 
-    private static final Random RANDOM = new Random();
+    final boolean[][] rows;
 
-    public static Grid fromRandomSize(final int widthMin, final int widthMax, final int heightMin, final int heightMax) {
-        return new Grid(
-                widthMin + RANDOM.nextInt(widthMax - widthMin),
-                heightMin + RANDOM.nextInt(heightMax - heightMin));
-    }
-
-    private final String[][] rows;
-
-    public Grid() {
-        this(0, 0);
+    public Grid(final Grid grid) {
+        this.rows = Arrays.stream(grid.rows)
+                .map(boolean[]::clone)
+                .toArray(boolean[][]::new);
     }
 
     public Grid(final int width, final int height) {
-        this.rows = new String[height][width];
+        this.rows = new boolean[height][width];
     }
 
-    public boolean isEmpty() {
-        return true;
+    public int getWidth() {
+        return this.rows.length == 0 ? 0 : this.rows[0].length;
+    }
+
+    public int getHeight() {
+        return this.rows.length;
+    }
+
+    public void setCellAlive(final Coordinate coordinate) {
+        if (coordinate.isIn(this)) {
+            this.rows[coordinate.getY()][coordinate.getX()] = true;
+        }
+    }
+
+    public boolean isCellAlive(final Coordinate coordinate) {
+        return coordinate.isIn(this) && this.rows[coordinate.getY()][coordinate.getX()];
     }
 
 }

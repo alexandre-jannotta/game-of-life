@@ -1,11 +1,15 @@
 package org.example.gameoflife;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
+
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GameOfLifeTest {
+
+    private static final Random RANDOM = new Random();
 
     GameOfLife test;
 
@@ -14,27 +18,35 @@ class GameOfLifeTest {
         this.test = new GameOfLife();
     }
 
-    @Test
-    void computeNextGenerationWithEmptyGrid() {
-        final Grid currentGenerationGrid = Grid.fromRandomSize(5, 10, 5, 10);
-        assertThat(currentGenerationGrid.isEmpty()).isTrue();
+    @RepeatedTest(10)
+    void surviveWithFewerThanTwoNeighbours() {
+        final Grid grid = this.newRandomGrid(5, 10, 5, 10);
+        final Coordinate coordinate = this.newRandomCoordinate(grid);
 
-        final Grid nextGenerationGrid = this.test.computeNextGeneration(currentGenerationGrid);
-        assertThat(nextGenerationGrid).isNotNull();
-        assertThat(nextGenerationGrid).isNotSameAs(currentGenerationGrid);
-        assertThat(nextGenerationGrid.isEmpty()).isTrue();
+        // Alone
+        grid.setCellAlive(coordinate);
+        assertThat(this.test.survive(grid, coordinate)).isFalse();
+
+        // with 1 neighbour
+        grid.setCellAlive(coordinate.move(GameOfLife.NEIGHBOUR_OFFSETS.get(0)));
+        assertThat(this.test.survive(grid, coordinate)).isFalse();
+
+        // with 2 neighbour
+        grid.setCellAlive(coordinate.move(GameOfLife.NEIGHBOUR_OFFSETS.get(1)));
+        assertThat(this.test.survive(grid, coordinate)).isTrue();
     }
 
-    @Test
-    void computeNextGenerationWithOneCellWithFewerThanTwoNeighbours() {
-        final Grid currentGenerationGrid = Grid.fromRandomSize(5, 10, 5, 10);
-        assertThat(currentGenerationGrid).isNotNull();
-        assertThat(currentGenerationGrid.isEmpty()).isFalse();
+    Grid newRandomGrid(final int widthMin, final int widthMax, final int heightMin, final int heightMax) {
+        return new Grid(
+                widthMin + RANDOM.nextInt(widthMax - widthMin),
+                heightMin + RANDOM.nextInt(heightMax - heightMin));
+    }
 
-        final Grid nextGenerationGrid = this.test.computeNextGeneration(currentGenerationGrid);
-        assertThat(nextGenerationGrid).isNotNull();
-        assertThat(nextGenerationGrid).isNotSameAs(currentGenerationGrid);
-        assertThat(nextGenerationGrid.isEmpty()).isTrue();
+    Coordinate newRandomCoordinate(final Grid grid) {
+        return Coordinate.builder()
+                .x(RANDOM.nextInt(grid.getWidth()))
+                .y(RANDOM.nextInt(grid.getHeight()))
+                .build();
     }
 
 }
