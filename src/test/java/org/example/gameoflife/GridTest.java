@@ -1,6 +1,5 @@
 package org.example.gameoflife;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -11,18 +10,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.gameoflife.GameOfLife.NEIGHBOUR_OFFSETS;
+import static org.example.gameoflife.Grid.NEIGHBOUR_OFFSETS;
 
-class GameOfLifeTest {
+class GridTest {
 
     private static final Random RANDOM = new Random();
-
-    GameOfLife test;
-
-    @BeforeEach
-    void init() {
-        this.test = new GameOfLife();
-    }
 
     @RepeatedTest(10)
     void anAliveCellDieWithFewerThanTwoNeighbours() {
@@ -32,9 +24,9 @@ class GameOfLifeTest {
 
         grid.setCellAlive(coordinate);
 
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 0
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 0
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 1
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 1
     }
 
     @RepeatedTest(10)
@@ -47,9 +39,9 @@ class GameOfLifeTest {
         grid.setCellAlive(neighbours.remove(0));
 
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isTrue(); // 2
+        assertThat(grid.cellSurvive(coordinate)).isTrue(); // 2
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isTrue(); // 3
+        assertThat(grid.cellSurvive(coordinate)).isTrue(); // 3
     }
 
     @RepeatedTest(10)
@@ -64,15 +56,15 @@ class GameOfLifeTest {
         grid.setCellAlive(neighbours.remove(0)); // 3
 
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 4
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 4
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 5
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 5
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 6
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 6
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 7
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 7
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 8
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 8
     }
 
     @RepeatedTest(10)
@@ -81,49 +73,49 @@ class GameOfLifeTest {
         final Coordinate coordinate = newRandomCoordinateNotOnEdge(grid);
         final List<Coordinate> neighbours = randomNeighboursOf(coordinate);
 
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 0
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 0
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 1
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 1
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 2
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 2
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isTrue(); // 3
+        assertThat(grid.cellSurvive(coordinate)).isTrue(); // 3
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 4
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 4
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 5
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 5
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 6
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 6
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 7
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 7
         grid.setCellAlive(neighbours.remove(0));
-        assertThat(this.test.survive(grid, coordinate)).isFalse(); // 8
+        assertThat(grid.cellSurvive(coordinate)).isFalse(); // 8
     }
 
     @Test
-    void testPredefinedGrid() {
-        final Grid currentGenerationGrid = this.newGrid("4 8\n" +
+    void predefinedGrid() {
+        final String actual = "4 8\n" +
                 "........\n" +
                 "....*...\n" +
                 "...**...\n" +
-                "........");
-        final Grid nextGenerationGrid = this.test.computeNextGeneration(currentGenerationGrid);
-        System.out.println(nextGenerationGrid);
+                "........";
+        final String expected = "4 8\n" +
+                "........\n" +
+                "...**...\n" +
+                "...**...\n" +
+                "........";
+        assertThat(Grid.parse(actual).nextGeneration().toString()).isEqualTo(expected);
     }
 
-    private Grid newGrid(final String s) {
-        final String[] rows = s.split("\n");
-        final String[] size = rows[0].split(" ");
-        final Grid grid = new Grid(Integer.parseInt(size[1]), Integer.parseInt(size[0]));
-        for (int rowIndex = 1; rowIndex < rows.length; rowIndex++) {
-            final char[] row = rows[rowIndex].toCharArray();
-            for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
-                if (row[columnIndex] == '*') {
-                    grid.setCellAlive(Coordinate.builder().x(columnIndex).y(rowIndex - 1).build());
-                }
-            }
-        }
-        return grid;
+    @Test
+    void edgeCase() {
+        final Grid grid = Grid.parse("4 8\n" +
+                "........\n" +
+                "....*...\n" +
+                "....*...\n" +
+                "........");
+        final Grid nextGenerationGrid = grid.nextGeneration();
+        System.out.println(nextGenerationGrid);
     }
 
     static Grid newRandomGrid() {
